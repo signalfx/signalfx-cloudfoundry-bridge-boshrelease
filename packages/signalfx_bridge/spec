@@ -1,0 +1,5 @@
+---
+name: signalfx_bridge
+
+files:
+  - signalfx_bridge/bridge-linux-amd64

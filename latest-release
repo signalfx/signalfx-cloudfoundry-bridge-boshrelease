@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ls -r -v releases/signalfx-bridge/signalfx-bridge-*.yml | (sed 's/.*\/.*-\(.*\)\.yml$/\1/' || echo 1) | head -1

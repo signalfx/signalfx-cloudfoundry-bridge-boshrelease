@@ -1,0 +1,54 @@
+---
+name: signalfx-bridge
+
+templates:
+  ctl.erb: bin/ctl
+  logrotate.conf.erb: config/logrotate.conf
+  logrotate.cron.erb: config/logrotate.cron
+  envvars.erb: config/envvars
+
+packages:
+  - signalfx_bridge
+
+properties:
+  cf.api_url:
+    description: "Cloud Controller API URL"
+  cf.traffic_controller_url:
+    description: "Traffic controller URL"
+  cf.uaa_url:
+    description: "UAA server URL"
+
+  signalfx.bridge.ingest_url:
+    description: "The API Ingest Endpoint for SignalFx"
+    default: "https://ingest.signalfx.com/v2/datapoint"
+  signalfx.bridge.access_token:
+    description: "Your SignalFx API access token"
+  signalfx.bridge.flush_interval_seconds:
+    description: "The duration in seconds between sending datapoints to SignalFx"
+    default: 3
+  signalfx.bridge.logrotate.freq_min:
+    description: "The frequency in minutes which logrotate will rotate VM logs"
+    default: 5
+  signalfx.bridge.logrotate.rotate:
+    description: "The number of files that logrotate will keep around on the VM"
+    default: 3
+  signalfx.bridge.logrotate.size:
+    description: "The size at which logrotate will decide to rotate the log file"
+    default: 50M
+
+  signalfx.bridge.uaa.username:
+    description: "The client that has access to the loggregator firehose"
+  signalfx.bridge.uaa.password:
+    description: "The secret for the user"
+  signalfx.bridge.insecure_ssl_skip_verify:
+    description: "Skip verifying SSL certificate"
+    default: false
+  signalfx.bridge.subscription_id:
+    description: "The subscription id to be used for the firehose"
+    default: signalfx
+  signalfx.bridge.idle_timeout_seconds:
+    description: "Number of seconds to wait before timing out the read to the firehose, if there are no messages"
+    default: 60
+  signalfx.bridge.app_metadata_cache_expiry_seconds:
+    description: "Number of seconds to cache app metadata that is used as SignalFx dimensions (e.g. app name, space/org info)"
+    default: 300

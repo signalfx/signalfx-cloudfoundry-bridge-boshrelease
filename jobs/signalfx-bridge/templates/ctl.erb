@@ -1,0 +1,40 @@
+#!/bin/bash -e
+
+RUN_DIR=/var/vcap/sys/run/signalfx-bridge
+LOG_DIR=/var/vcap/sys/log/signalfx-bridge
+PIDFILE=$RUN_DIR/pid
+
+case $1 in
+
+start)
+
+mkdir -p $RUN_DIR
+mkdir -p $LOG_DIR
+
+chown -R vcap:vcap $LOG_DIR
+
+(crontab -l | sed /signalfx-bridge.*logrotate/d; cat /var/vcap/jobs/signalfx-bridge/config/logrotate.cron) | sed /^$/d | crontab
+
+exec >>$LOG_DIR/signalfx-bridge.stdout.log \
+    2>>$LOG_DIR/signalfx-bridge.stderr.log
+
+source /var/vcap/jobs/signalfx-bridge/config/envvars
+
+echo $$ > $PIDFILE
+
+exec chpst -u vcap:vcap /var/vcap/packages/signalfx_bridge/bridge-linux-amd64
+
+;;
+
+stop)
+kill -9 `cat $PIDFILE`
+rm -f $PIDFILE
+
+;;
+
+*)
+echo "Usage: signalfx-bridge/bin {start|stop}"
+
+;;
+
+esac

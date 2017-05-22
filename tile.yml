@@ -1,0 +1,129 @@
+---
+name: signalfx-bridge  # TODO: take off '-new' once we have retired the Java version
+icon_file: resources/icon.png
+label: SignalFx Bridge
+description: Reports Cloud Foundry platform and VM metrics to SignalFx
+
+# Global defaults (all optional)
+#
+# org: test-org                         # Name of org to create for your apps
+# space: test-space                     # Name of space to create for your apps
+apply_open_security_group: true         # Apply open security group, default: false
+
+instance_definition:
+  name: instances
+  type: integer
+  configurable: false
+  default: 1
+  constraints:
+    max: 1
+
+# Specify the packages to be included in your tile.
+# The format of the section to include depends on the type
+# of package you are describing. For fragments of each type
+# that you can copy & paste, see:
+#
+# https://github.com/cf-platform-eng/tile-generator/blob/master/README.md
+#
+packages:
+- name: signalfx-bridge
+  type: bosh-release
+  path: tmp/release.tgz
+  label: SignalFx Bridge
+  jobs:
+  - name: signalfx_bridge
+    templates:
+    - name: signalfx-bridge
+      release: signalfx-bridge
+    memory: 1024
+    cpu: 2
+    static_ip: 1
+    properties:
+      cf:
+        uaa_url: (( .properties.uaa_url.value ))
+        api_url: (( .properties.cloudfoundry_api_url.value ))
+        traffic_controller_url: (( .properties.traffic_controller_url.value ))
+      signalfx:
+        bridge:
+          ingest_url: (( .properties.signalfx_ingest_url.value ))
+          access_token: (( .properties.signalfx_access_token.value ))
+          flush_interval_seconds: (( .properties.flush_interval_seconds.value ))
+          logrotate:
+            freq_min: 5
+            rotate: 5
+            size: "10M"
+          insecure_ssl_skip_verify: (( .properties.insecure_ssl_skip_verify.value ))
+          subscription_id: "signalfx-nozzle"
+          idle_timeout_seconds: 30
+          app_metadata_cache_expiry_seconds: (( .properties.app_metadata_cache_expiry_seconds.value ))
+          uaa:
+            username: (( .properties.uaa_username.value ))
+            password: (( .properties.uaa_password.value ))
+
+forms:
+- name: core_properties
+  label: Bridge Config
+  description: Core configuration that is required for the bridge to work
+  properties:
+  - name: signalfx_access_token
+    type: string
+    label: SignalFx API Access Token
+    description: The SignalFx API access token.  You can get this from the SignalFx admin tab.
+  - name: signalfx_ingest_url
+    type: string
+    label: SignalFx Ingestion URL
+    description: The ingest endpoint for SignalFx.  You should only need to set this if you are using our Metricproxy.
+    optional: true
+  - name: cloudfoundry_api_url
+    type: string
+    label: CloudFoundry API URL
+    description: The URL/IP address of the CloudFoundry/CloudController API in your platform
+  - name: traffic_controller_url
+    type: string
+    label: Traffic Controller API URL
+    optional: true
+    description: The URL for the Traffic Controller in your platform. This will be autodiscovered if left blank.
+  - name: uaa_url
+    type: string
+    label: UAA URL
+    description: The URL/IP address of the UAA server in your deployment to authenticate the nozzle to access the firehose
+  - name: uaa_username
+    type: string
+    label: UAA Username
+    description: Username that has the appropriate permissions to access the firehose and get app metadata
+  - name: uaa_password
+    type: string
+    label: UAA Password
+    description: Password for the UAA username specified above
+  - name: insecure_ssl_skip_verify
+    type: boolean
+    label: Skip SSL Verification
+    default: false
+    description: Useful for testing environments where SSL is not properly setup.  Should not be used in prod environments.
+  - name: flush_interval_seconds
+    type: integer
+    label: Flush Interval (seconds)
+    default: 3
+    description: How long to batch data from the firehose before sending to SignalFx
+  - name: app_metadata_cache_expiry_seconds
+    type: integer
+    label: App Metadata Cache TTL (seconds)
+    default: 300
+    description: How long to cache app metadata (e.g. app name, org/space name) so that it does not have to be fetched every time.
+
+
+# Customize upgrade parameters if the defaults don't meet your needs.
+#
+# update:
+#   canaries: 1
+#   canary_watch_time: 10000-100000
+#   max_in_flight: 1
+#   update_watch_time: 10000-100000
+
+# If prior versions of your tile are installed and configured, their
+# property values will not be overwritten by new defaults provided
+# in this file. If that is your intent, you must do the overwriting
+# explicitly using JavaScript migration functions, like so:
+#
+# migration: |
+#   properties['properties']['.properties.org']['value'] = 'system';

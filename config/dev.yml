@@ -1,0 +1,3 @@
+---
+dev_name: signalfx-bridge
+latest_release_filename: "/opt/bosh-release/releases/signalfx-bridge/signalfx-bridge-10.yml"

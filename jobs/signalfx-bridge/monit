@@ -1,0 +1,5 @@
+check process signalfx-bridge
+  with pidfile /var/vcap/sys/run/signalfx-bridge/pid
+  start program "/var/vcap/jobs/signalfx-bridge/bin/ctl start"
+  stop program "/var/vcap/jobs/signalfx-bridge/bin/ctl stop"
+  group vcap

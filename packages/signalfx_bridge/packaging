@@ -1,0 +1,7 @@
+set -e -x
+
+cd signalfx_bridge
+
+cp -a bridge-linux-amd64 ${BOSH_INSTALL_TARGET}
+
+chmod +x ${BOSH_INSTALL_TARGET}/bridge-linux-amd64

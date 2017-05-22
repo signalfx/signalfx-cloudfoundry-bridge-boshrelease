@@ -1,0 +1,44 @@
+---
+name: signalfx-bridge
+
+releases:
+- name: signalfx-bridge
+  version: latest
+
+stemcells:
+- alias: default
+  name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+  version: latest
+
+update:
+  canaries: 1
+  max_in_flight: 1
+  canary_watch_time: 1000-30000
+  update_watch_time: 1000-30000
+
+instance_groups:
+- name: signalfx-bridge
+  instances: 1
+  azs: ["z1"]
+  jobs:
+  - name: signalfx-bridge
+    release: signalfx-bridge
+    properties:
+      cf:
+        api_url: https://cloudcontroller.bosh-lite.com
+        traffic_controller_url: wss://doppler.bosh-lite.com:4443
+        uaa_url: https://uaa.bosh-lite.com
+      signalfx:
+        bridge:
+          uaa:
+            username: signalfx-bridge
+            password: s3cr3t
+          access_token: testing
+          insecure_ssl_skip_verify: true
+  vm_type: default
+  stemcell: default
+  networks:
+  - name: default
+
+
+

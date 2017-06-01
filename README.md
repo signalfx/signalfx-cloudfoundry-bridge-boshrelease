@@ -8,3 +8,9 @@ probably use the tile that is also generated from this repository.
 
 ## Properties
 
+The properties in the [spec file for the signalfx_bridge
+job](https://github.com/signalfx/signalfx-cloudfoundry-bridge-boshrelease/blob/master/jobs/signalfx-bridge/spec)
+correspond one-to-one to the properties described in the
+[Configuration](https://github.com/signalfx/signalfx-cloudfoundry-bridge#configuration)
+section of the SignalFx Bridge application repo.
+

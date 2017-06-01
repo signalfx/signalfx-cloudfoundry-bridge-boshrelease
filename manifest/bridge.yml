@@ -25,16 +25,18 @@ instance_groups:
     release: signalfx-bridge
     properties:
       cf:
-        api_url: https://cloudcontroller.bosh-lite.com
+        cloudfoundry_api_url: https://cloudcontroller.bosh-lite.com
         traffic_controller_url: wss://doppler.bosh-lite.com:4443
         uaa_url: https://uaa.bosh-lite.com
+        username: signalfx-bridge
+        password: s3cr3t
+      bosh:
+        director_url: https://director.bosh-lite.com:25555
+        client_id: signalfx-bridge
+        client_secret: s3cr3t
       signalfx:
-        bridge:
-          uaa:
-            username: signalfx-bridge
-            password: s3cr3t
-          access_token: testing
-          insecure_ssl_skip_verify: true
+        access_token: testing
+        insecure_ssl_skip_verify: true
   vm_type: default
   stemcell: default
   networks:

@@ -2,18 +2,9 @@ BUILD_PUBLISH ?= False
 BUILD_BRANCH ?= $(USER)
 DOCKER_IMAGE := quay.io/signalfuse/cloudfoundry-bridge-boshrelease-build:$(BUILD_BRANCH)
 TILE_VERSION := $(shell tr -d '\n' < VERSION)
-DOCKER_RUN := docker run -v $$(pwd):/opt/bosh-release -it --rm $(DOCKER_IMAGE)
+DOCKER_RUN := docker run -v $(PWD):/opt/bosh-release -it --rm $(DOCKER_IMAGE)
 RELEASE_VERSION := $(shell ./latest-release)
-
-# For Jenkins.
-ifdef BASE_DIR
-	ifdef JOB_NAME
-		SRC_ROOT := $(BASE_DIR)/$(JOB_NAME)/bridge-bosh-release
-	endif
-endif
-
-# Fallback to PWD.
-SRC_ROOT ?= $(PWD)
+BRIDGE_SRC_DIR ?= $(GOPATH)/src/github.com/signalfx/signalfx-bridge
 
 clean:
 	rm -rf build tile.yml .dev_builds dev_releases product
@@ -32,15 +23,19 @@ ifeq ($(BUILD_PUBLISH), True)
 endif
 
 upload-blobs: build-image
-	$(DOCKER_RUN) bosh add-blob tmp/bridge-linux-amd64 signalfx_bridge/bridge-linux-amd64
+	$(DOCKER_RUN) bosh add-blob bridge-linux-amd64 signalfx_bridge/bridge-linux-amd64
 	$(DOCKER_RUN) bosh upload-blobs
 
 final-release: build-image bridge-binary
+	rm -rf .dev_builds
+	@$(MAKE) upload-blobs
 	mkdir -p tmp
 	rm -f tmp/release.tgz
-	$(DOCKER_RUN) bosh create-release --final --tarball tmp/release.tgz --name signalfx-bridge --force
+	$(DOCKER_RUN) bosh create-release --final --tarball tmp/release.tgz --name signalfx-bridge --version $(TILE_VERSION) --force
 
-tile: build-image tile.yml
+# This target will only update the tile if the tile.yml file changed but won't
+# make a new final release
+product/signalfx-bridge-$(TILE_VERSION).pivotal: build-image tile.yml final-release
 	mkdir -p product
 	$(DOCKER_RUN) tile build $(TILE_VERSION)
 
@@ -50,20 +45,23 @@ ifeq ($(BUILD_PUBLISH), True)
 		--acl private
 endif
 
+# This target will make always make a new final release
+tile: product/signalfx-bridge-$(TILE_VERSION).pivotal
+
 push-tile-to-pcf: product/signalfx-bridge-$(TILE_VERSION).pivotal
-	pcf import product/signalfx-bridge-$(TILE_VERSION).pivotal
+	pcf import $^
 	pcf install signalfx-bridge $(TILE_VERSION)
 
 bridge-binary:
 	mkdir -p tmp
 	# This is for development and assumes you have the bridge app installed in
-	# the GOPATH and that envvar set.
-	@$(MAKE) -C $(GOPATH)/src/github.com/signalfx/cloudfoundry-bridge
-	cp $(GOPATH)/src/github.com/signalfx//cloudfoundry-bridge/bridge-linux-amd64 tmp/bridge-linux-amd64
+	# the BRIDGE_SRC_DIR, which can be overridden by envvars
+	@$(MAKE) -C $(BRIDGE_SRC_DIR)
+	cp $(BRIDGE_SRC_DIR)/signalfx-bridge-linux-amd64 bridge-linux-amd64
 
 bosh-dev-deploy:
 	bosh create-release --force
 	bosh -e bosh-lite upload-release --fix
 	bosh -e bosh-lite -d bridge deploy manifest/bridge.yml
 
-.PHONY: clean build-and-push bridge-binary build-image bosh-dev-release
+.PHONY: clean build-and-push bridge-binary build-image bosh-dev-release tile

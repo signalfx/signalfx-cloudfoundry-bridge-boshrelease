@@ -31,7 +31,7 @@ final-release: build-image bridge-binary
 	@$(MAKE) upload-blobs
 	mkdir -p tmp
 	rm -f tmp/release.tgz
-	$(DOCKER_RUN) bosh create-release --final --tarball tmp/release.tgz --name signalfx-bridge --force
+	$(DOCKER_RUN) bosh create-release --final --tarball tmp/release.tgz --name signalfx-bridge --version $(TILE_VERSION) --force
 
 # This target will only update the tile if the tile.yml file changed but won't
 # make a new final release

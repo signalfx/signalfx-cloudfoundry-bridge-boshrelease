@@ -11,3 +11,4 @@ blobstore/
 product/
 release/
 bridge-linux-amd64
+.DS_Store

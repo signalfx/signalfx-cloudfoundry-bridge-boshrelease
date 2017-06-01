@@ -1,7 +1,7 @@
 ---
-name: signalfx-bridge  # TODO: take off '-new' once we have retired the Java version
+name: signalfx-bridge
 icon_file: resources/icon.png
-label: SignalFx Bridge
+label: SignalFx Monitoring and Alerting for PCF
 description: Reports Cloud Foundry platform and VM metrics to SignalFx
 
 # Global defaults (all optional)
@@ -42,23 +42,28 @@ packages:
       cf:
         uaa_url: (( .properties.uaa_url.value ))
         api_url: (( .properties.cloudfoundry_api_url.value ))
-        traffic_controller_url: (( .properties.traffic_controller_url.value ))
+        username: (( .properties.uaa_username.value ))
+        password: (( .properties.uaa_password.value ))
+      bosh:
+        director_url: (( .properties.bosh_director_url.value ))
+        director_ip: (( $director.deployment_ip ))
+        client_id: (( .properties.bosh_client_id.value ))
+        client_secret: (( .properties.bosh_client_secret.value ))
       signalfx:
-        bridge:
-          ingest_url: (( .properties.signalfx_ingest_url.value ))
-          access_token: (( .properties.signalfx_access_token.value ))
-          flush_interval_seconds: (( .properties.flush_interval_seconds.value ))
-          logrotate:
-            freq_min: 5
-            rotate: 5
-            size: "10M"
-          insecure_ssl_skip_verify: (( .properties.insecure_ssl_skip_verify.value ))
-          subscription_id: "signalfx-nozzle"
-          idle_timeout_seconds: 30
-          app_metadata_cache_expiry_seconds: (( .properties.app_metadata_cache_expiry_seconds.value ))
-          uaa:
-            username: (( .properties.uaa_username.value ))
-            password: (( .properties.uaa_password.value ))
+        ingest_url: (( .properties.signalfx_ingest_url.value ))
+        access_token: (( .properties.signalfx_access_token.value ))
+      flush_interval_seconds: (( .properties.flush_interval_seconds.value ))
+      logrotate:
+        freq_min: 5
+        rotate: 5
+        size: "10M"
+      insecure_ssl_skip_verify: (( .properties.insecure_ssl_skip_verify.value ))
+      firehose:
+        subscription_id: "signalfx-nozzle"
+        idle_timeout_seconds: 30
+      app_metadata_cache_expiry_seconds: (( .properties.app_metadata_cache_expiry_seconds.value ))
+      deployments_to_include: (( .properties.deployments_to_include.value ))
+      metrics_to_exclude: (( .properties.metrics_to_exclude.value ))
 
 forms:
 - name: core_properties
@@ -78,23 +83,32 @@ forms:
     type: string
     label: CloudFoundry API URL
     description: The URL/IP address of the CloudFoundry/CloudController API in your platform
-  - name: traffic_controller_url
-    type: string
-    label: Traffic Controller API URL
-    optional: true
-    description: The URL for the Traffic Controller in your platform. This will be autodiscovered if left blank.
   - name: uaa_url
     type: string
-    label: UAA URL
-    description: The URL/IP address of the UAA server in your deployment to authenticate the nozzle to access the firehose
+    label: CF UAA URL
+    description: The URL/IP address of the Cloud Foundry UAA server in your deployment to authenticate the nozzle to access the firehose
   - name: uaa_username
     type: string
-    label: UAA Username
-    description: Username that has the appropriate permissions to access the firehose and get app metadata
+    label: CF UAA Username
+    description: Username/Client ID that has the appropriate permissions to access the firehose and get app metadata
   - name: uaa_password
+    type: secret
+    label: CF UAA Password
+    description: Password for the CF UAA username specified above
+
+  - name: bosh_director_url
     type: string
-    label: UAA Password
-    description: Password for the UAA username specified above
+    label: BOSH Director URL
+    description: URL (including scheme and port) to the BOSH Director API
+  - name: bosh_client_id
+    type: string
+    label: BOSH UAA Username
+    description: Username/Client ID that has access to the BOSH Director API
+  - name: bosh_client_secret
+    type: secret
+    label: BOSH UAA Password
+    description: Password for the BOSH UAA client specified above
+
   - name: insecure_ssl_skip_verify
     type: boolean
     label: Skip SSL Verification
@@ -110,6 +124,17 @@ forms:
     label: App Metadata Cache TTL (seconds)
     default: 300
     description: How long to cache app metadata (e.g. app name, org/space name) so that it does not have to be fetched every time.
+
+  - name: metrics_to_exclude
+    type: string_list
+    label: Metrics to Exclude
+    optional: true
+    description: Metrics to skip sending to SignalFx (separated by ',')
+  - name: deployments_to_include
+    type: string_list
+    label: Deployments to Include
+    optional: true
+    description: BOSH deployments to whitelist and send metrics for to SignalFx (blank means all deployments, separated by ',')
 
 
 # Customize upgrade parameters if the defaults don't meet your needs.

@@ -1,1 +1,1 @@
-*/<%= p("signalfx.bridge.logrotate.freq_min") %> * * * * test -x /usr/sbin/logrotate && /usr/sbin/logrotate /var/vcap/jobs/signalfx-bridge/config/logrotate.conf >> /var/vcap/sys/log/signalfx-bridge/logrotate_cron.log 2>&1
+*/<%= p("logrotate.freq_min") %> * * * * test -x /usr/sbin/logrotate && /usr/sbin/logrotate /var/vcap/jobs/signalfx-bridge/config/logrotate.conf >> /var/vcap/sys/log/signalfx-bridge/logrotate_cron.log 2>&1

@@ -1,8 +1,8 @@
 /var/vcap/sys/log/signalfx-bridge/*.log {
   missingok
-  rotate <%= p("signalfx.bridge.logrotate.rotate") %>
+  rotate <%= p("logrotate.rotate") %>
   compress
   delaycompress
   copytruncate
-  size=<%= p("signalfx.bridge.logrotate.size") %>
+  size=<%= p("logrotate.size") %>
 }

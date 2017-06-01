@@ -1,13 +1,24 @@
 #!/bin/bash
 
 export CLOUDFOUNDRY_API_URL="<%= p("cf.api_url") %>"
-export UAA_URL="<%= p("cf.uaa_url") %>"
-export UAA_USERNAME=<%= p("signalfx.bridge.uaa.username") %>
-export UAA_PASSWORD=<%= p("signalfx.bridge.uaa.password") %>
-export FIREHOSE_SUBSCRIPTION_ID="<%= p("signalfx.bridge.subscription_id") %>"
-export FLUSH_INTERVAL_SECONDS=<%= p("signalfx.bridge.flush_interval_seconds") %>
-export INSECURE_SSL_SKIP_VERIFY=<%= p("signalfx.bridge.insecure_ssl_skip_verify") %>
-export APP_METADATA_CACHE_EXPIRY_SECONDS=<%= p("signalfx.bridge.app_metadata_cache_expiry_seconds") %>
+export CF_UAA_URL="<%= p("cf.uaa_url") %>"
+export CF_USERNAME=<%= p("cf.username") %>
+export CF_PASSWORD=<%= p("cf.password") %>
 
-export SIGNALFX_INGEST_URL=<%= p("signalfx.bridge.ingest_url") %>
-export SIGNALFX_ACCESS_TOKEN=<%= p("signalfx.bridge.access_token") %>
+export BOSH_DIRECTOR_URL=<%= p("bosh.director_url") %>
+export BOSH_CLIENT_ID=<%= p("bosh.client_id") %>
+export BOSH_CLIENT_SECRET=<%= p("bosh.client_secret") %>
+
+<% if_p("cf.traffic_controller_url") do |url| %>
+export TRAFFIC_CONTROLLER_URL=<%= url %>
+<% end %>
+export FIREHOSE_SUBSCRIPTION_ID="<%= p("firehose.subscription_id") %>"
+export FLUSH_INTERVAL_SECONDS=<%= p("flush_interval_seconds") %>
+export FIREHOSE_IDLE_TIMEOUT_SECONDS=<%= p("firehose.idle_timeout_seconds") %>
+export INSECURE_SSL_SKIP_VERIFY=<%= p("insecure_ssl_skip_verify") %>
+export APP_METADATA_CACHE_EXPIRY_SECONDS=<%= p("app_metadata_cache_expiry_seconds") %>
+export DEPLOYMENTS_TO_INCLUDE=<%= p("deployments_to_include") %>
+export METRICS_TO_EXCLUDE=<%= p("metrics_to_exclude") %>
+
+export SIGNALFX_INGEST_URL=<%= p("signalfx.ingest_url") %>
+export SIGNALFX_ACCESS_TOKEN=<%= p("signalfx.access_token") %>

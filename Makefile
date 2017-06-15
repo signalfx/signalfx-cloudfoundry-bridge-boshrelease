@@ -4,7 +4,7 @@ DOCKER_IMAGE := quay.io/signalfuse/cloudfoundry-bridge-boshrelease-build:$(BUILD
 TILE_VERSION := $(shell tr -d '\n' < VERSION)
 DOCKER_RUN := docker run -v $(PWD):/opt/bosh-release -it --rm $(DOCKER_IMAGE)
 RELEASE_VERSION := $(shell ./latest-release)
-BRIDGE_SRC_DIR ?= $(GOPATH)/src/github.com/signalfx/signalfx-bridge
+BRIDGE_SRC_DIR ?= $(GOPATH)/src/github.com/signalfx/signalfx-cloudfoundry-bridge
 
 clean:
 	rm -rf build tile.yml .dev_builds dev_releases product
@@ -54,8 +54,8 @@ push-tile-to-pcf: product/signalfx-bridge-$(TILE_VERSION).pivotal
 
 bridge-binary:
 	mkdir -p tmp
-	# This is for development and assumes you have the bridge app installed in
-	# the BRIDGE_SRC_DIR, which can be overridden by envvars
+	# This assumes you have the bridge app installed in the BRIDGE_SRC_DIR,
+	# which can be set by an envvar
 	@$(MAKE) -C $(BRIDGE_SRC_DIR)
 	cp $(BRIDGE_SRC_DIR)/signalfx-bridge-linux-amd64 bridge-linux-amd64
 

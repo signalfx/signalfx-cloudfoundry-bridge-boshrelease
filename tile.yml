@@ -45,8 +45,7 @@ packages:
         username: (( .properties.uaa_username.value ))
         password: (( .properties.uaa_password.value ))
       bosh:
-        director_url: (( .properties.bosh_director_url.value ))
-        director_ip: (( $director.deployment_ip ))
+        director_url: https://(( $director.hostname )):25555
         client_id: (( .properties.bosh_client_id.value ))
         client_secret: (( .properties.bosh_client_secret.value ))
       signalfx:
@@ -96,10 +95,6 @@ forms:
     label: CF UAA Password
     description: Password for the CF UAA username specified above
 
-  - name: bosh_director_url
-    type: string
-    label: BOSH Director URL
-    description: URL (including scheme and port) to the BOSH Director API
   - name: bosh_client_id
     type: string
     label: BOSH UAA Username

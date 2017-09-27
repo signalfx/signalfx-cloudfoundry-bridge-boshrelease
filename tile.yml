@@ -63,6 +63,9 @@ packages:
       app_metadata_cache_expiry_seconds: (( .properties.app_metadata_cache_expiry_seconds.value ))
       deployments_to_include: (( .properties.deployments_to_include.value ))
       metrics_to_exclude: (( .properties.metrics_to_exclude.value ))
+      http_proxy: (( .properties.http_proxy.value ))
+      https_proxy: (( .properties.https_proxy.value ))
+      no_proxy: (( .properties.no_proxy.value ))
 
 forms:
 - name: core_properties
@@ -81,11 +84,11 @@ forms:
   - name: cloudfoundry_api_url
     type: string
     label: CloudFoundry API URL
-    description: The URL/IP address of the CloudFoundry/CloudController API in your platform
+    description: The URL of the CloudFoundry/CloudController API in your platform (e.g. https://api.cf.mydomain.com)
   - name: uaa_url
     type: string
     label: CF UAA URL
-    description: The URL/IP address of the Cloud Foundry UAA server in your deployment to authenticate the nozzle to access the firehose
+    description: The URL of the Cloud Foundry UAA server in your deployment to authenticate the nozzle to access the firehose (e.g. https://uaa.cf.mydomain.com)
   - name: uaa_username
     type: string
     label: CF UAA Username
@@ -130,6 +133,24 @@ forms:
     label: Deployments to Include
     optional: true
     description: BOSH deployments to whitelist and send metrics for to SignalFx (blank means all deployments, separated by ',')
+
+  - name: http_proxy
+    type: string
+    label: HTTP Proxy URL
+    description: If you need HTTP proxying, you can specify the proxy for HTTP traffic here
+    optional: true
+
+  - name: https_proxy
+    type: string
+    label: HTTPS Proxy URL
+    description: If you need HTTPS proxying, you can specify the proxy for HTTPS traffic here
+    optional: true
+
+  - name: no_proxy
+    type: string
+    label: Proxy Exclusions
+    description: If some domain names should not go through the proxy, specify them here as a comma-separated list.  Do not specify the scheme (e.g. http/https), only the domain names.
+    optional: true
 
 
 # Customize upgrade parameters if the defaults don't meet your needs.

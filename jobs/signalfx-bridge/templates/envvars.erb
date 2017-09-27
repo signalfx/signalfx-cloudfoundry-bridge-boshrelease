@@ -22,3 +22,13 @@ export METRICS_TO_EXCLUDE=<%= p("metrics_to_exclude") %>
 
 export SIGNALFX_INGEST_URL=<%= p("signalfx.ingest_url") %>
 export SIGNALFX_ACCESS_TOKEN=<%= p("signalfx.access_token") %>
+
+<% if_p("http_proxy") do |url| %>
+export http_proxy=<%= url %>
+<% end %>
+<% if_p("https_proxy") do |url| %>
+export https_proxy=<%= url %>
+<% end %>
+<% if_p("no_proxy") do |url| %>
+export no_proxy=<%= url %>
+<% end %>

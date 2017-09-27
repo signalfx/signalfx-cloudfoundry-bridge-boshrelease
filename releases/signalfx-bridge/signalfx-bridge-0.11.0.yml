@@ -1,0 +1,19 @@
+name: signalfx-bridge
+version: 0.11.0
+commit_hash: 03a4163
+uncommitted_changes: true
+jobs:
+- name: signalfx-bridge
+  version: 1f85f0220d2f561d99508e1bf62d4546889fd06b
+  fingerprint: 1f85f0220d2f561d99508e1bf62d4546889fd06b
+  sha1: 167927002a3386731fed11442408d37128ea0a40
+packages:
+- name: signalfx_bridge
+  version: cbc123df369b057f33c50fc273d5e97fc2869d3d
+  fingerprint: cbc123df369b057f33c50fc273d5e97fc2869d3d
+  sha1: a1ce04d31bdf6416003cb2a4c6d6861c7e0b1ab6
+  dependencies: []
+license:
+  version: 05bc8aa5d0ba8d302a976a439385c43c81c81abc
+  fingerprint: 05bc8aa5d0ba8d302a976a439385c43c81c81abc
+  sha1: 15e809af8758bf150f11f8e8d83b8d963e6759fc

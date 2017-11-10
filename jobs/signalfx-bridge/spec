@@ -70,3 +70,13 @@ properties:
   deployments_to_include:
     description: "Whitelist of BOSH deployments to send metrics to SignalFx for (blank means all deployments)"
     default: ""
+
+  http_proxy:
+    description: "HTTP proxy URL"
+    default: ""
+  https_proxy:
+    description: "HTTPS proxy URL"
+    default: ""
+  no_proxy:
+    description: "Proxy exclusion list"
+    default: ""

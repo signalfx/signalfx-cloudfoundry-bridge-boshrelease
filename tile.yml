@@ -57,6 +57,7 @@ packages:
         rotate: 5
         size: "10M"
       insecure_ssl_skip_verify: (( .properties.insecure_ssl_skip_verify.value ))
+      enable_tsdb_server: (( .properties.enable_tsdb_server.value ))
       firehose:
         subscription_id: "signalfx-nozzle"
         idle_timeout_seconds: 30
@@ -112,6 +113,13 @@ forms:
     label: Skip SSL Verification
     default: false
     description: Useful for testing environments where SSL is not properly setup.  Should not be used in prod environments.
+
+  - name: enable_tsdb_server
+    type: boolean
+    label: Enable TSDB Server
+    default: true
+    description: Runs a fake TSDB server that BOSH can send Health Monitor metrics to
+
   - name: flush_interval_seconds
     type: integer
     label: Flush Interval (seconds)

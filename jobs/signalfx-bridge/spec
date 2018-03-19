@@ -50,6 +50,11 @@ properties:
   insecure_ssl_skip_verify:
     description: "Skip verifying SSL certificate"
     default: false
+
+  enable_tsdb_server:
+    description: "Run a fake TSDB Server for collecting BOSH HM metrics"
+    default: true
+
   flush_interval_seconds:
     description: "The duration in seconds between sending datapoints to SignalFx"
     default: 3

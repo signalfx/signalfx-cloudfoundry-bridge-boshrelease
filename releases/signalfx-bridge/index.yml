@@ -29,10 +29,14 @@ builds:
     version: 0.10.4
   c0f87796-9a28-4871-616d-55de6fdb825e:
     version: "1"
+  d80d30c0-b0f9-4f73-4cf3-c833393cffa6:
+    version: 0.11.4
   e7d5f8b3-97da-4170-52a9-e64bca0c127d:
     version: "10"
   ec3ca28c-0560-4415-4fd5-4837bf8389da:
     version: "6"
+  f54a8d8d-5e60-4cfb-61ab-849f76c12484:
+    version: 0.11.3
   f778a8f8-1145-4ef0-5702-9d720a0d2d42:
     version: "7"
 format-version: "2"

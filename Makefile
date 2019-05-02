@@ -7,7 +7,7 @@ RELEASE_VERSION := $(shell ./latest-release)
 BRIDGE_SRC_DIR ?= $(GOPATH)/src/github.com/signalfx/signalfx-cloudfoundry-bridge
 
 clean:
-	rm -rf build tile.yml .dev_builds dev_releases product
+	rm -rf build .dev_builds dev_releases product
 
 build-image:
 	# Pull latest before doing build so that if it's already been
@@ -24,7 +24,7 @@ endif
 
 upload-blobs: build-image
 	$(DOCKER_RUN) bosh add-blob bridge-linux-amd64 signalfx_bridge/bridge-linux-amd64
-	$(DOCKER_RUN) bosh upload-blobs
+	#$(DOCKER_RUN) bosh upload-blobs
 
 final-release: build-image bridge-binary
 	rm -rf .dev_builds

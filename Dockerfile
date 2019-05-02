@@ -1,4 +1,4 @@
-FROM cfplatformeng/tile-generator:v12.0.0
+FROM cfplatformeng/tile-generator:v13.0.2
 
 RUN apk add --no-cache make m4 wget
 

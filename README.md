@@ -1,3 +1,5 @@
+:warning: **This project is deprecated**
+
 # SignalFx Bridge BOSH Release
 
 This is a BOSH release for the [SignalFx

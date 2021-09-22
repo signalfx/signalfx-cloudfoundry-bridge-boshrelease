@@ -1,4 +1,3 @@
-:warning: **This project is deprecated**
 
 # SignalFx Bridge BOSH Release
 

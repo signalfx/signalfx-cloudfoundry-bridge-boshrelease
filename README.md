@@ -1,3 +1,8 @@
+> # :warning: End of Support (EoS) Notice
+> **The SignalFx Cloud Foundry Bridge and SignalFx Smart Agent have reached End of Support.**
+>
+> The [Splunk Distribution of OpenTelemetry Collector for Pivotal Cloud Foundry](https://github.com/signalfx/splunk-otel-collector/tree/main/deployments/cloudfoundry) is the successor.
+
 >ℹ️&nbsp;&nbsp;SignalFx was acquired by Splunk in October 2019. See [Splunk SignalFx](https://www.splunk.com/en_us/investor-relations/acquisitions/signalfx.html) for more information.
 
 # SignalFx Bridge BOSH Release
